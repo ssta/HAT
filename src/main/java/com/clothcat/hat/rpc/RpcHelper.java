@@ -27,6 +27,7 @@ import com.clothcat.hat.util.HLogger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -73,5 +74,31 @@ public class RpcHelper {
     HLogger.log(Level.FINEST, "Received RPC response: \n" + s);
     return s;
   }
-  
+
+  /**
+   * Run the rpc command checkwallet.
+   *
+   * @return The JSON string returned by running the checkwallet command.
+   */
+  public String checkwallet() {
+    List<String> cmd = new ArrayList<>();
+    cmd.addAll(Arrays.asList(cmdline));
+    cmd.add("checkwallet");
+
+    return runCommand(cmd);
+  }
+
+  /**
+   * Run the cclistcoins rpc command.
+   *
+   * @return The json returned by running the cclistcoins command.
+   */
+  public String cclistcoins() {
+    List<String> cmd = new ArrayList<>();
+    cmd.addAll(Arrays.asList(cmdline));
+    cmd.add("cclistcoins");
+
+    return runCommand(cmd);
+  }
+
 }

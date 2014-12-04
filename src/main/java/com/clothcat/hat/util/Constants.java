@@ -48,6 +48,20 @@ public class Constants {
   public static final String HTML_FILEPATH = FILE_BASE + "html/";
 
   /**
+   * Where the sqlite database is stored
+   */
+  public static final String SQLITE_DIRECTORY = FILE_BASE + "sqlite/";
+
+  /**
+   * The sqlite database file
+   */
+  public static final String SQLITE_DB_FILE = SQLITE_DIRECTORY + "HAT.db";
+
+  /**
+   * sqlite jdbc url
+   */
+  public static final String SQLITE_JDBC_URL = "jdbc:sqlite:" + SQLITE_DB_FILE;
+  /**
    * Will generates log files called
    * <pre>Hyperpool_n.log</pre> where n is a rotating digit
    */
@@ -67,10 +81,8 @@ public class Constants {
   public static final int MEBIBYTES = 1024 * 1024;
 
   /* FTP details at byethost */
-  public static final String FTP_HOSTNAME="ftp.byethost11.com";
-  public static final String FTP_USERNAME="b11_15559137";
-  public static final String FTP_PASSWORD="tqNUz6o.1vE2";
-  
-  
-  
+  public static final String FTP_HOSTNAME = "ftp.byethost11.com";
+  public static final String FTP_USERNAME = "b11_15559137";
+  public static final String FTP_PASSWORD = "tqNUz6o.1vE2";
+
 }
