@@ -1,1 +1,3 @@
 * Code to generate database tables if they don't already exist
+* Parameterise configuration into a database table so we can create a tool to 
+  edit config.  Need sane defaults so things will Just Work upon first run.
