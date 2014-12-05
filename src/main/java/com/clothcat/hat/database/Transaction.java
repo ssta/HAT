@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 /**
  * Encapsulates a row in the TRANSACTIONS table
  *
- * @author Stephen Stafford <clothcat@gmail.com>
+ * @author Stephen Stafford &lt;clothcat@gmail.com&gt;
  */
 public class Transaction {
 

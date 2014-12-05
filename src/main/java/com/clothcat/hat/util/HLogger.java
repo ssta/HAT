@@ -23,8 +23,6 @@ package com.clothcat.hat.util;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -35,7 +33,7 @@ import java.util.logging.SimpleFormatter;
 /**
  * Singleton logger class. Yeah, I know singletons are evil blah blah blah...
  *
- * @author Stephen Stafford <clothcat@gmail.com>
+ * @author Stephen Stafford &lt;clothcat@gmail.com&gt;
  */
 public class HLogger {
 

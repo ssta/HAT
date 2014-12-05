@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Stephen Stafford <clothcat@gmail.com>
+ * @author Stephen Stafford &lt;clothcat@gmail.com&gt;
  */
 public class RpcHelper {
 

@@ -25,7 +25,7 @@ package com.clothcat.hat.util;
 
 /**
  *
- * @author Stephen Stafford <clothcat@gmail.com>
+ * @author Stephen Stafford &lt;clothcat@gmail.com&gt;
  */
 public class Constants {
 

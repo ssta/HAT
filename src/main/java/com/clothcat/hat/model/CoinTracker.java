@@ -21,41 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.clothcat.hat.database;
-
-import com.clothcat.hat.util.Constants;
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+package com.clothcat.hat.model;
 
 /**
- * Class to encapsulate all database operations to the sqlite database.
+ * Keeps track of what coins in the wallet are, where they have come from and
+ * what they are currently assigned to. his is done by storing them in the
+ * database in various tables -- primarily in the COIN_TRACK table, but that
+ * merely is an index which will point to other tables.
  *
  * @author Stephen Stafford &lt;clothcat@gmail.com&gt;
  */
-public class DatabaseHelper {
-
-  private Connection connection;
-
-  /**
-   * @return the connection
-   * @throws java.sql.SQLException if there's a problem getting the connection
-   */
-  public Connection getConnection() throws SQLException {
-    if (connection == null) {
-      // make sure the direcftory exists in case the database needs to be created
-      File f = new File(Constants.SQLITE_DIRECTORY);
-      f.mkdirs();
-      try {
-        Class.forName("org.sqlite.JDBC");
-      } catch (ClassNotFoundException ex) {
-        Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      connection = DriverManager.getConnection(Constants.SQLITE_JDBC_URL);
-    }
-    return connection;
-  }
+public class CoinTracker {
+  
 }

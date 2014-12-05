@@ -23,12 +23,11 @@
  */
 package com.clothcat.hat.database;
 
-import java.sql.Connection;
 import junit.framework.TestCase;
 
 /**
  *
- * @author Stephen Stafford <clothcat@gmail.com>
+ * @author Stephen Stafford &lt;clothcat@gmail.com&gt;
  */
 public class TransactionTest extends TestCase {
 
