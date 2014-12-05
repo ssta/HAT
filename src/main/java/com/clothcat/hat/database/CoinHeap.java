@@ -21,7 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.clothcat.hat.model;
+package com.clothcat.hat.database;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A coin heap is a pile of coins in the wallet. Every coin heap has an address,
@@ -38,6 +45,7 @@ package com.clothcat.hat.model;
  */
 public class CoinHeap {
 
+//<editor-fold defaultstate="collapsed" desc="fields">
   /**
    * A descriptive name that can be used to see what this heap is for
    */
@@ -71,6 +79,8 @@ public class CoinHeap {
   private int blockIndex;
 
   private HeapStatus status;
+//</editor-fold>
+  //<editor-fold defaultstate="collapsed" desc="accessors">
 
   /**
    * @return the name
@@ -169,6 +179,76 @@ public class CoinHeap {
   public void setStatus(HeapStatus status) {
     this.status = status;
   }
+//</editor-fold>
+
+  public static CoinHeap getHeap(String blockHash, int blockIndex) {
+    CoinHeap heap = null;
+    try (Connection c = new DatabaseHelper().getConnection()) {
+      PreparedStatement ps = c.prepareStatement("SELECT * FROM HEAPS WHERE "
+          + "BLOCK_HASH=? AND BLOCK_INDEX=?");
+      ps.setString(1, blockHash);
+      ps.setInt(2, blockIndex);
+      ResultSet rs = ps.executeQuery();
+      if (rs.next()) {
+        heap = new CoinHeap();
+        heap.name = rs.getString("NAME");
+        heap.blockHash = rs.getString("BLOCK_HASH");
+        heap.blockIndex = rs.getInt("BLOCK_INDEX");
+        heap.amount = rs.getLong("AMOUNT");
+        heap.confirmations = rs.getInt("CONFIRMATIONS");
+        heap.timeCreated = rs.getLong("TIME_CREATED");
+        heap.status = HeapStatus.valueOf(rs.getString("STATUS"));
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(CoinHeap.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return heap;
+  }
+
+  public static CoinHeap getHeap(String name) {
+    CoinHeap heap = null;
+    try (Connection c = new DatabaseHelper().getConnection()) {
+      PreparedStatement ps = c.prepareStatement("SELECT * FROM HEAPS WHERE "
+          + "NAME=?");
+      ps.setString(1, name);
+      ResultSet rs = ps.executeQuery();
+      if (rs.next()) {
+        heap = new CoinHeap();
+        heap.name = rs.getString("NAME");
+        heap.blockHash = rs.getString("BLOCK_HASH");
+        heap.blockIndex = rs.getInt("BLOCK_INDEX");
+        heap.amount = rs.getLong("AMOUNT");
+        heap.confirmations = rs.getInt("CONFIRMATIONS");
+        heap.timeCreated = rs.getLong("TIME_CREATED");
+        heap.status = HeapStatus.valueOf(rs.getString("STATUS"));
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(CoinHeap.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return heap;
+  }
+
+  public boolean storeHeap() {
+    boolean reply = false;
+    try (Connection c = new DatabaseHelper().getConnection()) {
+      String INSERT_SQL = "INSERT INTO HEAPS VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+      PreparedStatement ps = c.prepareStatement(INSERT_SQL);
+      ps.setString(1, name);
+      ps.setString(2, blockHash);
+      ps.setInt(3, blockIndex);
+      ps.setLong(4, amount);
+      ps.setInt(5, confirmations);
+      ps.setLong(6, timeCreated);
+      ps.setString(7, status.name());
+
+      ps.executeUpdate();
+      reply = true;
+    } catch (SQLException ex) {
+      Logger.getLogger(Transaction.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return reply;
+  }
 
   public static enum HeapStatus {
 
@@ -194,5 +274,6 @@ public class CoinHeap {
     HAT_MATURING, // coins that belong to the pool/pool owner(s)
     HAT_STAKING,
     HAT_MINTING,
+    OBSOLETE, // for heaps that are no longer current, but may be useful to store information about anyway
   }
 }
