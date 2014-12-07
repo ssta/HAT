@@ -252,28 +252,83 @@ public class CoinHeap {
 
   public static enum HeapStatus {
 
-    INCOMING, // Coins which are incoming and have not yet been processed.
-    FLOAT, // Coins which are owned by the pool itself and are designated for paying fees and keeping a working float.
-    POOL_FILLING, // invested but the pool's not full yet
-    POOL_MATURING, // Coins in a pool of invested coins
-    POOL_STAKING, // mature coins (>8.8days), waiting to mint
-    POOL_MINTED, // minted but awaiting return to investors
+    /**
+     * Coins which are incoming, but not yet processed/allocated to a type
+     */
+    INCOMING,
+    /**
+     * Coins which are owned by the pool itself and are designated for paying
+     * fees and keeping a working float.
+     */
+    FLOAT,
+    /**
+     * invested but the pool is not full yet
+     */
+    POOL_FILLING,
+    /**
+     * Coins in a pool of invested coins
+     */
+    POOL_MATURING,
+    /**
+     * mature coins (>8.8days), waiting to mint
+     */
+    POOL_STAKING,
+    /**
+     * minted but awaiting return to investors
+     */
+    POOL_MINTED,
+    /**
+     * Coins in a bonus pool that's not yet full
+     */
     BONUS_FILLING,
-    BONUS_MATURING, // Coins in a bonus pool 
+    /**
+     * Coins in a bonus pool waiting to be old enough to mint
+     */
+    BONUS_MATURING,
+    /**
+     * Coins in a bonus pool old enough to mint (>8.8 days)
+     */
     BONUS_STAKING,
+    /**
+     * Minted but awaiting disposition
+     */
     BONUS_MINTED,
+    /**
+     * Lottery pool not yet full
+     */
     LOTTERY_FILLING,
-    LOTTERY_MATURING, // coins in a lottery pool
+    /**
+     * Lottery pool waiting to get old enough to mint
+     */
+    LOTTERY_MATURING,
+    /**
+     * Lottery pool old enough to mint that hasn't minted yet
+     */
     LOTTERY_STAKING,
+    /**
+     * Lottery pool that has minted but hasn't yet been allocated
+     */
     LOTTERY_MINTED,
+    /**
+     * Endowment pool (eg hyperjobs) not yet full
+     */
     ENDOWMENT_FILLING,
-    ENDOWMENT_MATURING, // coins in an endowment pool
+    /**
+     * Endowment pool waiting to get old enough to mint
+     */
+    ENDOWMENT_MATURING,
+    /**
+     * Endowment pool old enough to mint that hasn't minted yet
+     */
     ENDOWMENT_STAKING,
+    /**
+     * Endowment pool that's minted but not been paid out yet
+     */
     ENDOWMENT_MINTED,
-    HAT_FILLING,
-    HAT_MATURING, // coins that belong to the pool/pool owner(s)
-    HAT_STAKING,
-    HAT_MINTING,
-    OBSOLETE, // for heaps that are no longer current, but may be useful to store information about anyway
+    /**
+     * for heaps that are no longer current, but may be useful to store
+     * information about anyway
+     */
+    OBSOLETE,
   }
 }
