@@ -27,7 +27,9 @@ import com.clothcat.hat.util.Constants;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +47,7 @@ public class DatabaseHelper {
    * @throws java.sql.SQLException if there's a problem getting the connection
    */
   public Connection getConnection() throws SQLException {
-    if (connection == null) {
+    if (connection == null || connection.isClosed()) {
       // make sure the direcftory exists in case the database needs to be created
       File f = new File(Constants.SQLITE_DIRECTORY);
       f.mkdirs();
@@ -57,5 +59,126 @@ public class DatabaseHelper {
       connection = DriverManager.getConnection(Constants.SQLITE_JDBC_URL);
     }
     return connection;
+  }
+
+  public boolean tableExists(String tableName) {
+    String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "'";
+    boolean reply = false;
+    try (Connection c = getConnection()) {
+      Statement st = c.createStatement();
+      st.executeQuery(sql);
+      ResultSet rs = st.executeQuery(sql);
+      if (rs.next()) {
+        reply = rs.getString(1).equalsIgnoreCase(tableName);
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return reply;
+  }
+
+  /**
+   * Create the POOLS table
+   */
+  public void createPoolsTable() {
+    String sql = "CREATE TABLE IF NOT EXISTS POOLS ("
+        + "    NAME TEXT,"
+        + "    TYPE TEXT,"
+        + "    FILL_AMOUNT INTEGER,"
+        + "    MINT_AMOUNT INTEGER,"
+        + "    BONUS_AMOUNT INTEGER,"
+        + "    PRIMARY KEY (NAME)"
+        + ")";
+    if (!tableExists("POOLS")) {
+      try (Connection c = getConnection()) {
+        Statement st = c.createStatement();
+        st.executeUpdate(sql);
+      } catch (SQLException ex) {
+        Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }
+
+  /**
+   * Create the HEAPS table
+   */
+  public void createHeapsTable() {
+    String sql = "CREATE TABLE IF NOT EXISTS HEAPS ("
+        + "    NAME TEXT,"
+        + "    BLOCK_HASH TEXT,"
+        + "    BLOCK_INDEX INTEGER,"
+        + "    AMOUNT INTEGER,"
+        + "    CONFIRMATIONS INTEGER,"
+        + "    TIME_CREATED INTEGER,"
+        + "    STATUS TEXT,"
+        + "    PRIMARY KEY (BLOCK_HASH, BLOCK_INDEX)"
+        + ")";
+    if (!tableExists("HEAPS")) {
+      try (Connection c = getConnection()) {
+        Statement st = c.createStatement();
+        st.executeUpdate(sql);
+      } catch (SQLException ex) {
+        Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }
+
+  /**
+   * Create the ADDRESSES table
+   */
+  public void createAdressesTable() {
+    String sql = "CREATE TABLE IF NOT EXISTS ADDRESSES ("
+        + "    ADDRESS TEXT,"
+        + "    ADDRESS_TYPE TEXT,"
+        + "    PRIMARY KEY (ADDRESS)"
+        + ")";
+    if (!tableExists("ADDRESSES")) {
+      try (Connection c = getConnection()) {
+        Statement st = c.createStatement();
+        st.executeUpdate(sql);
+      } catch (SQLException ex) {
+        Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }
+
+  /**
+   * Create the TRANSACTIONS table
+   */
+  public void createTransactionsTable() {
+    String sql = "CREATE TABLE IF NOT EXISTS TRANSACTIONS ("
+        + "    TX_ID TEXT,"
+        + "    TX_INDEX INTEGER,"
+        + "    TX_TIMESTAMP INTEGER,"
+        + "    TX_TYPE TEXT,"
+        + "    PROCESSED_TIME INTEGER,"
+        + "    PRIMARY KEY (TX_ID, TX_INDEX)"
+        + ")";
+    if (!tableExists("TRANSACTIONS")) {
+      try (Connection c = getConnection()) {
+        Statement st = c.createStatement();
+        st.executeUpdate(sql);
+      } catch (SQLException ex) {
+        Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }
+
+  public static void main(String[] args) {
+    DatabaseHelper dbh = new DatabaseHelper();
+    System.out.println("POOLS::" + dbh.tableExists("POOLS"));
+    System.out.println("HEAPS::" + dbh.tableExists("HEAPS"));
+    System.out.println("ADDRESSES::" + dbh.tableExists("ADDRESSES"));
+    System.out.println("TRANSACTIONS::" + dbh.tableExists("TRANSACTIONS"));
+    System.out.println("DOESNOTEXIST::" + dbh.tableExists("DOESNOTEXIST"));
+    dbh.createPoolsTable();
+    dbh.createHeapsTable();
+    dbh.createAdressesTable();
+    dbh.createTransactionsTable();
+    System.out.println("POOLS::" + dbh.tableExists("POOLS"));
+    System.out.println("HEAPS::" + dbh.tableExists("HEAPS"));
+    System.out.println("ADDRESSES::" + dbh.tableExists("ADDRESSES"));
+    System.out.println("TRANSACTIONS::" + dbh.tableExists("TRANSACTIONS"));
+    System.out.println("DOESNOTEXIST::" + dbh.tableExists("DOESNOTEXIST"));
   }
 }
